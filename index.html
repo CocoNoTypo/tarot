@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 命運聖殿 · 78張完整塔羅占卜</title>
+    <title>🔮 命運聖殿 · 78張密教塔羅占卜</title>
     <style>
         :root {
-            --primary: #0f081d;
+            --primary: #0a0514;
             --accent: #ffd700;
             --accent-rgb: 255, 215, 0;
             --text-light: #f5f0ff;
+            --card-front-bg: #160d29;
         }
 
         body {
@@ -64,20 +65,22 @@
             flex-shrink: 0; margin-right: -55px; position: relative; z-index: 1;
         }
 
+        /* 蓋牌背面：金邊密教雙圈魔法陣 */
         .card-back-design {
-            width: 100%; height: 100%; background: radial-gradient(circle, #3d1b75 0%, #170a33 100%);
+            width: 100%; height: 100%; background: radial-gradient(circle, #3d1b75 0%, #120626 100%);
             border: 2px solid var(--accent); border-radius: 8px; box-sizing: border-box;
             position: relative; display: flex; justify-content: center; align-items: center;
         }
         .card-back-design::before {
-            content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px;
-            border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 5px;
+            content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 6px;
         }
         .card-back-pattern {
-            width: 55px; height: 55px; border: 1px dashed rgba(255, 215, 0, 0.5);
+            width: 60px; height: 60px; border: 1px dashed rgba(255, 215, 0, 0.4);
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.2);
         }
-        .card-back-pattern::after { content: "🔮"; font-size: 20px; filter: drop-shadow(0 0 5px var(--accent)); }
+        .card-back-pattern::after { content: "✨\A👁️\A✨"; white-space: pre; text-align: center; font-size: 14px; line-height: 1.1; color: var(--accent); filter: drop-shadow(0 0 5px var(--accent)); }
 
         .tarot-card:hover {
             transform: translateY(-20px); margin-right: -35px; z-index: 100;
@@ -85,13 +88,8 @@
         }
 
         .shuffling { justify-content: center; }
-        .shuffling .tarot-card {
-            position: absolute; margin-right: 0; animation: shuffleAnim 0.5s ease-in-out infinite alternate;
-        }
-        @keyframes shuffleAnim {
-            0% { transform: translateX(-70px) rotate(-10deg); }
-            100% { transform: translateX(70px) rotate(10deg); }
-        }
+        .shuffling .tarot-card { position: absolute; margin-right: 0; animation: shuffleAnim 0.5s ease-in-out infinite alternate; }
+        @keyframes shuffleAnim { 0% { transform: translateX(-70px) rotate(-10deg); } 100% { transform: translateX(70px) rotate(10deg); } }
 
         .slots-container { display: flex; justify-content: space-around; width: 100%; max-width: 650px; margin: 40px auto; gap: 15px; }
         .slot {
@@ -108,21 +106,24 @@
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; box-sizing: border-box; }
         .card-back { padding: 0; }
         
+        /* 全新向量圖面卡牌正面 */
         .card-front {
-            background: #0f081d; color: #fff;
+            background: linear-gradient(135deg, #1f113a 0%, #0d061a 100%); color: #fff;
             transform: rotateY(180deg); border: 2px solid var(--accent); display: flex;
-            flex-direction: column; justify-content: flex-start; align-items: center; padding: 0;
-            overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            flex-direction: column; justify-content: space-between; align-items: center; padding: 10px 6px;
+            overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
         }
-        .card-img {
-            width: 100%; height: 135px; background-size: cover; background-position: center;
-            border-bottom: 1px solid var(--accent); background-color: #1a0f30;
+        /* 內建占卜圖案容器 */
+        .card-graphics-box {
+            width: 88px; height: 105px; border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 6px; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; background: rgba(0,0,0,0.3); position: relative;
         }
-        .card-title-tag {
-            font-size: 10px; color: var(--accent); text-align: center; width: 100%;
-            padding: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .card-status-tag { font-size: 9px; font-weight: bold; padding-bottom: 2px; }
+        .vector-symbol { font-size: 32px; filter: drop-shadow(0 0 8px var(--accent)); margin-bottom: 5px; }
+        .vector-element-tag { font-size: 9px; color: #8a7bb0; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .card-title-tag { font-size: 11px; color: #fff; text-align: center; width: 100%; font-weight: bold; }
+        .card-status-tag { font-size: 9px; font-weight: bold; }
 
         .reversed { transform: rotateY(180deg) rotate(180deg) !important; }
 
@@ -137,8 +138,8 @@
 </head>
 <body>
 
-    <h1>🔮 命運聖殿 · 78張完整塔羅占卜</h1>
-    <div class="subtitle">隨機顯現 32張命運之扉 · 精準對應正逆雙位與真實牌面</div>
+    <h1>🔮 命運聖殿 · 78張密教占卜</h1>
+    <div class="subtitle">全面啟用 CSS 向量魔法圖陣 · 100% 完美顯現全端占卜</div>
 
     <div class="setup-section" id="setupSection">
         <p>請在心中默想你的問題，輸入在下方開啟命運之門：</p>
@@ -167,7 +168,7 @@
     </div>
 
     <script>
-        // 1. 大阿爾克那數據庫（採用高穩定、高相容性圖片路徑）
+        // 1. 大阿爾克那數據庫（內建高畫質向量符號，免外部圖片伺服器）
         const majorNames = [
             "愚者 (The Fool)", "魔術師 (The Magician)", "女祭司 (The High Priestess)", "女皇 (The Empress)",
             "皇帝 (The Emperor)", "教皇 (The Hierophant)", "戀人 (The Lovers)", "戰車 (The Chariot)",
@@ -202,11 +203,13 @@
             { up: "圓滿、達成目標、旅程結束、全面成功", rev: "未竟全功、受阻、停滯、缺乏進展" }
         ];
 
-        let masterDeck = [];
-        const majorSlugs = [
-            "m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08", "m09",
-            "m10", "m11", "m12", "m13", "m14", "m15", "m16", "m17", "m18", "m19", "m20", "m21"
+        // 大牌專屬向量符號陣列
+        const majorIcons = [
+            "🎒", "🪄", "🌙", "👑", "⚔️", "📜", "❤️", "🛡️", "🦁", "⏳", 
+            "🎡", "⚖️", "⚓", "💀", "🏺", "👿", "⚡", "⭐", "🌃", "☀️", "🎺", "🌍"
         ];
+
+        let masterDeck = [];
 
         for(let i=0; i<22; i++) {
             masterDeck.push({
@@ -214,15 +217,15 @@
                 element: "命運核心課題",
                 upMeaning: majorMeanings[i].up,
                 revMeaning: majorMeanings[i].rev,
-                imgUrl: `https://tarotapi.com{majorSlugs[i]}.jpg`
+                icon: majorIcons[i]
             });
         }
-        // 2. 小阿爾克那 56張牌組定義與釋義
+        // 2. 小阿爾克那 56張牌組定義與向量符號映射
         const suits = [
-            { id: 'wands', name: '權杖', elem: '火 (行動/熱情)', slug: 'Wands' },
-            { id: 'cups', name: '聖杯', elem: '水 (情感/人際)', slug: 'Cups' },
-            { id: 'swords', name: '寶劍', elem: '風 (思想/考驗)', slug: 'Swords' },
-            { id: 'pentacles', name: '星幣', elem: '土 (物質/現實)', slug: 'Pentacles' }
+            { name: '權杖', elem: '火 (行動/熱情)', icon: '🪵' },
+            { name: '聖杯', elem: '水 (情感/人際)', icon: '🏆' },
+            { name: '寶劍', elem: '風 (思想/考驗)', icon: '🗡️' },
+            { name: '星幣', elem: '土 (物質/現實)', icon: '🪙' }
         ];
 
         const ranks = [
@@ -242,7 +245,7 @@
             { lvl: 'King', name: '國王', up: "權威領導、掌控全局、成功穩定", rev: "獨裁、濫用權力、缺乏遠見" }
         ];
 
-        // 自動組裝56張小牌，並對應專屬的高相容第三方卡片圖案網址
+        // 自動組裝56張小牌，注入內建的元素向量圖章
         suits.forEach(suit => {
             ranks.forEach(rank => {
                 masterDeck.push({
@@ -250,7 +253,7 @@
                     element: suit.elem,
                     upMeaning: rank.up,
                     revMeaning: rank.rev,
-                    imgUrl: `https://tarotapi.com{suit.slug}/${rank.lvl.toLowerCase()}.jpg`
+                    icon: suit.icon
                 });
             });
         });
@@ -308,7 +311,7 @@
             }
         }
 
-        // 選牌至卡槽
+        // 選牌至卡槽（改用內建向量圖案渲染）
         function selectCardToSlot(index, cardEl) {
             if(chosenCards.length >= 3 || cardEl.style.visibility === 'hidden') return;
 
@@ -326,10 +329,13 @@
                         <div class="card-back">
                             <div class="card-back-design"><div class="card-back-pattern"></div></div>
                         </div>
-                        <!-- 翻牌正面：包含真實塔羅牌圖片 -->
+                        <!-- 翻牌正面：100% 程式內建向量渲染 -->
                         <div class="card-front ${cardData.isReversed ? 'reversed' : ''}">
-                            <div class="card-img" style="background-image: url('${cardData.imgUrl}');"></div>
-                            <div class="card-title-tag">${cardData.name}</div>
+                            <div class="card-graphics-box">
+                                <div class="vector-symbol">${cardData.icon}</div>
+                                <div class="vector-element-tag">${cardData.element.split(' ')[0]}</div>
+                            </div>
+                            <div class="card-title-tag">${cardData.name.replace('[大牌] ','').replace('[權杖] ','').replace('[聖杯] ','').replace('[寶劍] ','').replace('[星幣] ','')}</div>
                             <div class="card-status-tag" style="color:${cardData.isReversed ? '#ff4d4d' : '#00ffcc'};">
                                 ${cardData.isReversed ? '🔄 逆位' : '☀️ 正位'}
                             </div>
