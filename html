@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 命運聖殿 · 78張視覺完整塔羅占卜</title>
+    <style>
+        :root {
+            --primary: #0f081d;
+            --accent: #ffd700;
+            --accent-rgb: 255, 215, 0;
+            --text-light: #f5f0ff;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary);
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 350px 350px, 250px 250px;
+            color: var(--text-light);
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; box-sizing: border-box;
+        }
+
+        h1 { color: var(--accent); text-align: center; margin-bottom: 5px; text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.3); }
+        .subtitle { color: #aaa; margin-bottom: 25px; font-size: 14px; text-align: center; }
+
+        .setup-section, .reading-section { width: 100%; max-width: 850px; text-align: center; margin-bottom: 20px; }
+
+        input[type="text"] {
+            width: 60%; padding: 12px 20px; border: 2px solid var(--accent); border-radius: 25px;
+            background: rgba(255,255,255,0.08); color: white; font-size: 16px; outline: none;
+        }
+
+        button {
+            padding: 12px 30px; background: linear-gradient(135deg, #ffd700 0%, #b89200 100%);
+            color: #0f081d; border: none; border-radius: 25px; font-weight: bold; cursor: pointer;
+            font-size: 16px; margin-left: 10px; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--accent); }
+        
+        .reset-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a357a 0%, #2c1b4d 100%); color: white;
+            border: 1px solid var(--accent); margin: 25px auto 0 auto; display: none;
+            border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 16px;
+        }
+
+        .deck-container {
+            position: relative; height: 210px; width: 100%; display: flex;
+            justify-content: flex-start; align-items: center; margin: 30px 0;
+            overflow-x: auto; padding: 15px 20px; border-radius: 12px;
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); box-sizing: border-box;
+        }
+        .deck-container::-webkit-scrollbar { height: 6px; }
+        .deck-container::-webkit-scrollbar-thumb { background: rgba(var(--accent-rgb), 0.3); border-radius: 3px; }
+
+        .tarot-card {
+            width: 100px; height: 165px; border-radius: 8px; cursor: pointer;
+            box-shadow: -4px 4px 10px rgba(0,0,0,0.6); transition: all 0.25s ease;
+            flex-shrink: 0; margin-right: -55px; position: relative; z-index: 1;
+        }
+
+        .card-back-design {
+            width: 100%; height: 100%; background: radial-gradient(circle, #3d1b75 0%, #170a33 100%);
+            border: 2px solid var(--accent); border-radius: 8px; box-sizing: border-box;
+            position: relative; display: flex; justify-content: center; align-items: center;
+        }
+        .card-back-design::before {
+            content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 5px;
+        }
+        .card-back-pattern {
+            width: 55px; height: 55px; border: 1px dashed rgba(255, 215, 0, 0.5);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        }
+        .card-back-pattern::after { content: "🔮"; font-size: 20px; filter: drop-shadow(0 0 5px var(--accent)); }
+
+        .tarot-card:hover {
+            transform: translateY(-20px); margin-right: -35px; z-index: 100;
+            box-shadow: -8px 12px 20px rgba(0,0,0,0.8), 0 0 10px rgba(var(--accent-rgb), 0.4);
+        }
+
+        .shuffling { justify-content: center; }
+        .shuffling .tarot-card {
+            position: absolute; margin-right: 0; animation: shuffleAnim 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes shuffleAnim {
+            0% { transform: translateX(-70px) rotate(-10deg); }
+            100% { transform: translateX(70px) rotate(10deg); }
+        }
+
+        .slots-container { display: flex; justify-content: space-around; width: 100%; max-width: 650px; margin: 40px auto; gap: 15px; }
+        .slot {
+            width: 120px; height: 195px; border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 10px; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; position: relative; background: rgba(0,0,0,0.3);
+        }
+        .slot-label { position: absolute; bottom: -30px; font-size: 14px; color: var(--accent); font-weight: bold; }
+
+        .chosen-card { width: 100%; height: 100%; perspective: 1000px; cursor: pointer; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .chosen-card.flipped .card-inner { transform: rotateY(180deg); }
+
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; box-sizing: border-box; }
+        .card-back { padding: 0; }
+        
+        /* 圖片卡牌正面優化 */
+        .card-front {
+            background: #0f081d; color: #fff;
+            transform: rotateY(180deg); border: 2px solid var(--accent); display: flex;
+            flex-direction: column; justify-content: flex-start; align-items: center; padding: 0;
+            overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+        .card-img {
+            width: 100%; height: 135px; background-size: cover; background-position: center;
+            border-bottom: 1px solid var(--accent);
+        }
+        .card-title-tag {
+            font-size: 10px; color: var(--accent); text-align: center; width: 100%;
+            padding: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .card-status-tag { font-size: 9px; font-weight: bold; padding-bottom: 2px; }
+
+        .reversed { transform: rotateY(180deg) rotate(180deg) !important; }
+
+        .interpretation {
+            width: 100%; max-width: 850px; background: rgba(255,255,255,0.05); padding: 25px;
+            border-radius: 12px; border-left: 5px solid var(--accent); display: none; margin-top: 30px; text-align: left;
+        }
+        .meaning-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; }
+        .meaning-item:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+        .meaning-item h4 { margin: 0 0 10px 0; font-size: 18px; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <h1>🔮 命運聖殿 · 78張視覺完整塔羅占卜</h1>
+    <div class="subtitle">隨機顯現 32張命運之扉 · 精準對應正逆雙位與真實牌面</div>
+
+    <div class="setup-section" id="setupSection">
+        <p>請在心中默想你的問題，輸入在下方開啟命運之門：</p>
+        <input type="text" id="questionInput" placeholder="例如：我與心儀對象未來的感情發展？">
+        <button onclick="startShuffle()">祈願洗牌</button>
+    </div>
+
+    <div class="reading-section" id="readingSection" style="display:none;">
+        <h3 id="displayQuestion" style="color: var(--accent);"></h3>
+        <p id="instructionText">請點選 3 張牌放入下方的時空卡槽中：</p>
+        
+        <div class="deck-container" id="deckContainer"></div>
+
+        <div class="slots-container">
+            <div class="slot" id="slot0"><span class="slot-label">過去 (根源)</span></div>
+            <div class="slot" id="slot1"><span class="slot-label">現在 (現狀)</span></div>
+            <div class="slot" id="slot2"><span class="slot-label">未來 (啟示)</span></div>
+        </div>
+
+        <div class="interpretation" id="interpretation">
+            <h3 style="color: var(--accent); margin-top:0; text-align:center; border-bottom:2px solid var(--accent); padding-bottom:10px;">🔮 啟示錄解讀</h3>
+            <div id="meaningsLists"></div>
+        </div>
+
+        <button onclick="resetTarot()" class="reset-btn" id="resetBtn">重新占卜</button>
+    </div>
+
+    <script>
+        // 1. 大阿爾克那數據庫（含真實圖片網址）
+        const majorNames = [
+            "愚者 (The Fool)", "魔術師 (The Magician)", "女祭司 (The High Priestess)", "女皇 (The Empress)",
+            "皇帝 (The Emperor)", "教皇 (The Hierophant)", "戀人 (The Lovers)", "戰車 (The Chariot)",
+            "正義 (Justice)", "隱士 (The Hermit)", "命運之輪 (Wheel of Fortune)", "力量 (Strength)",
+            "倒吊人 (The Hanged Man)", "死神 (Death)", "節制 (Temperance)", "惡魔 (The Devil)",
+            "高塔 (The Tower)", "星星 (The Star)", "月亮 (The Moon)", "太陽 (The Sun)",
+            "審判 (Judgement)", "世界 (The World)"
+        ];
+        
+        const majorMeanings = [
+            { up: "新起點、冒險、自由、無限可能", rev: "魯莽、不負責任、盲目、遲疑不前" },
+            { up: "創造力、專注、掌控、資源豐富", rev: "能力不足、欺騙、方向錯誤、意志動搖" },
+            { up: "直覺、潛意識、靜心、智慧內斂", rev: "過度理智、忽略直覺、膚淺、隱秘揭穿" },
+            { up: "豐收、孕育、母愛、富足與美感", rev: "過度掌控、缺乏安全感、創意受阻" },
+            { up: "權力、穩定、秩序、領導與保護", rev: "專制、缺乏自控、無能無力、暴躁" },
+            { up: "傳統、精神引導、體制、尋求共識", rev: "打破常規、教條主義、思想受限" },
+            { up: "選擇、和諧、愛情、價值觀契合", rev: "不合、錯誤抉擇、矛盾、關係疏離" },
+            { up: "意志力、勝利、前進、克服障礙", rev: "失控、方向混亂、挫敗、急躁壞事" },
+            { up: "公平、真相、法律、客觀與因果", rev: "不公、偏見、失衡、法律糾紛" },
+            { up: "內省、尋求真理、孤獨、低調指引", rev: "孤立、偏執、拒絕建議、寂寞焦慮" },
+            { up: "轉折點、好運、命運轉動、機遇", rev: "運氣不佳、抗拒改變、逆境、重複犯錯" },
+            { up: "勇氣、耐力、內在力量、溫柔掌控", rev: "軟弱、自我懷疑、濫用暴力、恐懼" },
+            { up: "換位思考、犧牲、等待、奉獻", rev: "無謂的犧牲、停滯不前、掙扎、急功近利" },
+            { up: "結束、轉變、新生、舊事物的告別", rev: "抗拒改變、死拖活拉、恐懼結束" },
+            { up: "平衡、協調、融合、健康與淨化", rev: "失衡、缺乏溝通、衝突、過度放縱" },
+            { up: "慾望、束縛、物質誘惑、執著", rev: "覺醒、擺脫束縛、看清現實、釋放" },
+            { up: "突變、幻滅、打破體制、意外衝擊", rev: "危機現曙光、避免更大災難、抗拒重組" },
+            { up: "希望、靈感、寧靜、指引與信心", rev: "失去信心、失望、悲觀、靈感枯竭" },
+            { up: "不安、恐懼、隱藏的危機、直覺模糊", rev: "解除誤會、真相大白、克服恐懼" },
+            { up: "成功、活力、光明、自信與喜悅", rev: "短暫失意、過度自負、熱情減退" },
+            { up: "覺醒、重大決定、因果清算、釋懷", rev: "拒絕召喚、延誤時機、自欺欺人" },
+            { up: "圓滿、達成目標、旅程結束、全面成功", rev: "未竟全功、受阻、停滯、缺乏進展" }
+        ];
+
+        let masterDeck = [];
+        // 載入22張大牌並綁定公共圖片庫網址 (網址規則：00_Fool 到 21_World)
+        const imgSlug = [
+            "00_Fool", "01_Magician", "02_HighPriestess", "03_Empress", "04_Emperor", "05_Hierophant",
+            "06_Lovers", "07_Chariot", "08_Strength", "09_Hermit", "10_WheelOfFortune", "11_Justice",
+            "12_HangedMan", "13_Death", "14_Temperance", "15_Devil", "16_Tower", "17_Star",
+            "18_Moon", "19_Sun", "20_Judgement", "21_World"
+        ];
+
+        for(let i=0; i<22; i++) {
+            // 由於原版對調，修正力量與正義圖片排序
+            let currentSlug = imgSlug[i];
+            if(i === 8) currentSlug = "11_Justice";
+            if(i === 11) currentSlug = "08_Strength";
+
+            masterDeck.push({
+                name: `${majorNames[i]}`,
+                element: "命運核心課題",
+                upMeaning: majorMeanings[i].up,
+                revMeaning: majorMeanings[i].rev,
+                imgUrl: `https://githubusercontent.com{currentSlug}.jpg`
+            });
+        }
+        // 2. 小阿爾克那 56張牌組定義與圖片映射
+        const suits = [
+            { id: 'wands', name: '權杖', elem: '火 (行動/熱情)', slug: 'w' },
+            { id: 'cups', name: '聖杯', elem: '水 (情感/人際)', slug: 'c' },
+            { id: 'swords', name: '寶劍', elem: '風 (思想/考驗)', slug: 's' },
+            { id: 'pentacles', name: '星幣', elem: '土 (物質/現實)', slug: 'p' }
+        ];
+
+        const ranks = [
+            { lvl: 'Ace', name: '王牌', up: "全新機遇、能量湧現、新方向", rev: "時機未到、缺乏動力、錯失良機", file: '01' },
+            { lvl: '2', name: '二', up: "規劃、權衡、跨出第一步", rev: "猶豫不決、失衡、缺乏遠見", file: '02' },
+            { lvl: '3', name: '三', up: "團隊合作、展望未來、初見成效", rev: "進度受阻、溝通不良、合作破裂", file: '03' },
+            { lvl: '4', name: '四', up: "穩定、慶祝、和諧與安全感", rev: "沉悶、渴望突破、內部不穩", file: '04' },
+            { lvl: '5', name: '五', up: "競爭、衝突、混亂與挑戰", rev: "尋求和解、內耗結束、避開衝突", file: '05' },
+            { lvl: '6', name: '六', up: "勝利、獲得認可、前進與回報", rev: "流言蜚語、短暫成功、延遲", file: '06' },
+            { lvl: '7', name: '七', up: "防禦、堅持立場、勇氣", rev: "精疲力竭、放棄、防線崩潰", file: '07' },
+            { lvl: '8', name: '八', up: "迅速進展、訊息傳播、行動力", rev: "混亂受阻、方向錯誤、急躁冒進", file: '08' },
+            { lvl: '9', name: '九', up: "不屈不撓、即將成功、累積防備", rev: "壓力過重、防禦過當、陷入瓶頸", file: '09' },
+            { lvl: '10', name: '十', up: "責任頂點、大功告成、負擔沉重", rev: "釋放壓力、逃避責任、重新調整", file: '10' },
+            { lvl: 'Page', name: '侍從', up: "新消息、學習熱情、好奇心", rev: "缺乏計劃、幼稚、八卦與延遲", file: '11' },
+            { lvl: 'Knight', name: '騎士', up: "積極行動、勇往直前、進展", rev: "魯莽衝動、計畫停滯、橫衝直撞", file: '12' },
+            { lvl: 'Queen', name: '王后', up: "成熟包容、情感富足、掌控力", rev: "情緒化、嫉妒心強、缺乏自信", file: '13' },
+            { lvl: 'King', name: '國王', up: "權威領導、掌控全局、成功穩定", rev: "獨裁、濫用權力、缺乏遠見", file: '14' }
+        ];
+
+        // 組裝56張小牌進入masterDeck並生成各自網址
+        suits.forEach(suit => {
+            ranks.forEach(rank => {
+                masterDeck.push({
+                    name: `[${suit.name}] ${suit.name}${rank.name}`,
+                    element: suit.elem,
+                    upMeaning: rank.up,
+                    revMeaning: rank.rev,
+                    imgUrl: `https://githubusercontent.com{suit.slug}${rank.file}.jpg`
+                });
+            });
+        });
+        let currentDeck = [];
+        let chosenCards = [];
+        let flippedCount = 0;
+
+        // 優化：滑鼠滾輪可橫向捲動牌堆
+        const container = document.getElementById('deckContainer');
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            container.scrollLeft += e.deltaY;
+        });
+
+        // 洗牌控制器
+        function startShuffle() {
+            const question = document.getElementById('questionInput').value.trim();
+            if(!question) { alert('請先輸入你要占卜的問題！'); return; }
+
+            document.getElementById('setupSection').style.display = 'none';
+            document.getElementById('readingSection').style.display = 'block';
+            document.getElementById('displayQuestion').innerText = `🔮 占卜問題：${question}`;
+            
+            container.innerHTML = '';
+            container.classList.add('shuffling');
+
+            // 產生 18 張牌作為洗牌動畫的殘影
+            for(let i=0; i<18; i++) {
+                let card = document.createElement('div');
+                card.className = 'tarot-card';
+                card.innerHTML = `<div class="card-back-design"><div class="card-back-pattern"></div></div>`;
+                card.style.animationDelay = `${i * 0.04}s`;
+                container.appendChild(card);
+            }
+
+            // 2秒動畫後正式展牌
+            setTimeout(() => {
+                container.classList.remove('shuffling');
+                dealCards();
+            }, 2000);
+        }
+
+        // 隨機抽選 32 張並生成正反位
+        function dealCards() {
+            currentDeck = [...masterDeck].sort(() => Math.random() - 0.5);
+            currentDeck = currentDeck.map(card => ({ ...card, isReversed: Math.random() > 0.5 }));
+
+            container.innerHTML = '';
+            for(let i=0; i<32; i++) {
+                let cardEl = document.createElement('div');
+                cardEl.className = 'tarot-card';
+                cardEl.innerHTML = `<div class="card-back-design"><div class="card-back-pattern"></div></div>`;
+                cardEl.onclick = () => selectCardToSlot(i, cardEl);
+                container.appendChild(cardEl);
+            }
+        }
+
+        // 選牌至卡槽
+        function selectCardToSlot(index, cardEl) {
+            if(chosenCards.length >= 3 || cardEl.style.visibility === 'hidden') return;
+
+            const currentSlotIndex = chosenCards.length;
+            const cardData = currentDeck[index];
+            chosenCards.push(cardData);
+
+            cardEl.style.visibility = 'hidden';
+
+            const slot = document.getElementById(`slot${currentSlotIndex}`);
+            slot.innerHTML += `
+                <div class="chosen-card" onclick="revealCard(this, ${currentSlotIndex})">
+                    <div class="card-inner">
+                        <!-- 蓋牌背面 -->
+                        <div class="card-back">
+                            <div class="card-back-design"><div class="card-back-pattern"></div></div>
+                        </div>
+                        <!-- 翻牌正面：包含真實塔羅牌圖片 -->
+                        <div class="card-front ${cardData.isReversed ? 'reversed' : ''}">
+                            <div class="card-img" style="background-image: url('${cardData.imgUrl}');"></div>
+                            <div class="card-title-tag">${cardData.name}</div>
+                            <div class="card-status-tag" style="color:${cardData.isReversed ? '#ff4d4d' : '#00ffcc'};">
+                                ${cardData.isReversed ? '🔄 逆位' : '☀️ 正位'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if(chosenCards.length === 3) {
+                document.getElementById('instructionText').innerText = '⚡ 選牌完成！請由左至右點擊卡片進行翻牌解讀：';
+            }
+        }
+
+        // 翻開卡片與動態顯示釋義
+        function revealCard(cardEl, index) {
+            if(cardEl.classList.contains('flipped')) return;
+            
+            cardEl.classList.add('flipped');
+            flippedCount++;
+
+            document.getElementById('interpretation').style.display = 'block';
+            
+            const cardData = chosenCards[index];
+            const slotTitles = ['【過去 (根源)】', '【現在 (現狀)】', '【未來 (啟示)】'];
+            
+            const item = document.createElement('div');
+            item.className = 'meaning-item';
+            item.innerHTML = `
+                <h4>${slotTitles[index]} ${cardData.name} · ${cardData.isReversed ? '逆位 🔄' : '正位 ☀️'}</h4>
+                <p><strong>能量屬性：</strong> ${cardData.element}</p>
+                <p><strong>牌意解讀：</strong> ${cardData.isReversed ? cardData.revMeaning : cardData.upMeaning}</p>
+            `;
+            document.getElementById('meaningsLists').appendChild(item);
+
+            if(flippedCount === 3) {
+                document.getElementById('instructionText').innerHTML = '占卜已圓滿完成。願群星指引你的前路！';
+                document.getElementById('resetBtn').style.display = 'block';
+            }
+        }
+
+        // 重新占卜（Reset機制）
+        function resetTarot() {
+            chosenCards = [];
+            flippedCount = 0;
+            document.getElementById('questionInput').value = '';
+            document.getElementById('meaningsLists').innerHTML = '';
+            document.getElementById('interpretation').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+            
+            for(let i=0; i<3; i++) {
+                const labels = ['過去 (根源)', '現在 (現狀)', '未來 (啟示)'];
+                document.getElementById(`slot${i}`).innerHTML = `<span class="slot-label">${labels[i]}</span>`;
+            }
+            
+            document.getElementById('readingSection').style.display = 'none';
+            document.getElementById('setupSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
