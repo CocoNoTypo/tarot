@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 命運聖殿 · 78張視覺完整塔羅占卜</title>
+    <title>🔮 命運聖殿 · 78張完整塔羅占卜</title>
     <style>
         :root {
             --primary: #0f081d;
@@ -50,7 +50,7 @@
         }
 
         .deck-container {
-            position: relative; height: 210px; width: 100%; display: flex;
+            position: relative; height: 215px; width: 100%; display: flex;
             justify-content: flex-start; align-items: center; margin: 30px 0;
             overflow-x: auto; padding: 15px 20px; border-radius: 12px;
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); box-sizing: border-box;
@@ -108,7 +108,6 @@
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; box-sizing: border-box; }
         .card-back { padding: 0; }
         
-        /* 圖片卡牌正面優化 */
         .card-front {
             background: #0f081d; color: #fff;
             transform: rotateY(180deg); border: 2px solid var(--accent); display: flex;
@@ -117,7 +116,7 @@
         }
         .card-img {
             width: 100%; height: 135px; background-size: cover; background-position: center;
-            border-bottom: 1px solid var(--accent);
+            border-bottom: 1px solid var(--accent); background-color: #1a0f30;
         }
         .card-title-tag {
             font-size: 10px; color: var(--accent); text-align: center; width: 100%;
@@ -138,7 +137,7 @@
 </head>
 <body>
 
-    <h1>🔮 命運聖殿 · 78張視覺完整塔羅占卜</h1>
+    <h1>🔮 命運聖殿 · 78張完整塔羅占卜</h1>
     <div class="subtitle">隨機顯現 32張命運之扉 · 精準對應正逆雙位與真實牌面</div>
 
     <div class="setup-section" id="setupSection">
@@ -168,11 +167,11 @@
     </div>
 
     <script>
-        // 1. 大阿爾克那數據庫（含真實圖片網址）
+        // 1. 大阿爾克那數據庫（採用高穩定、高相容性圖片路徑）
         const majorNames = [
             "愚者 (The Fool)", "魔術師 (The Magician)", "女祭司 (The High Priestess)", "女皇 (The Empress)",
             "皇帝 (The Emperor)", "教皇 (The Hierophant)", "戀人 (The Lovers)", "戰車 (The Chariot)",
-            "正義 (Justice)", "隱士 (The Hermit)", "命運之輪 (Wheel of Fortune)", "力量 (Strength)",
+            "力量 (Strength)", "隱士 (The Hermit)", "命運之輪 (Wheel of Fortune)", "正義 (Justice)",
             "倒吊人 (The Hanged Man)", "死神 (Death)", "節制 (Temperance)", "惡魔 (The Devil)",
             "高塔 (The Tower)", "星星 (The Star)", "月亮 (The Moon)", "太陽 (The Sun)",
             "審判 (Judgement)", "世界 (The World)"
@@ -187,10 +186,10 @@
             { up: "傳統、精神引導、體制、尋求共識", rev: "打破常規、教條主義、思想受限" },
             { up: "選擇、和諧、愛情、價值觀契合", rev: "不合、錯誤抉擇、矛盾、關係疏離" },
             { up: "意志力、勝利、前進、克服障礙", rev: "失控、方向混亂、挫敗、急躁壞事" },
-            { up: "公平、真相、法律、客觀與因果", rev: "不公、偏見、失衡、法律糾紛" },
+            { up: "勇氣、耐力、內在力量、溫柔掌控", rev: "軟弱、自我懷疑、濫用暴力、恐懼" },
             { up: "內省、尋求真理、孤獨、低調指引", rev: "孤立、偏執、拒絕建議、寂寞焦慮" },
             { up: "轉折點、好運、命運轉動、機遇", rev: "運氣不佳、抗拒改變、逆境、重複犯錯" },
-            { up: "勇氣、耐力、內在力量、溫柔掌控", rev: "軟弱、自我懷疑、濫用暴力、恐懼" },
+            { up: "公平、真相、法律、客觀與因果", rev: "不公、偏見、失衡、法律糾紛" },
             { up: "換位思考、犧牲、等待、奉獻", rev: "無謂的犧牲、停滯不前、掙扎、急功近利" },
             { up: "結束、轉變、新生、舊事物的告別", rev: "抗拒改變、死拖活拉、恐懼結束" },
             { up: "平衡、協調、融合、健康與淨化", rev: "失衡、缺乏溝通、衝突、過度放縱" },
@@ -204,54 +203,46 @@
         ];
 
         let masterDeck = [];
-        // 載入22張大牌並綁定公共圖片庫網址 (網址規則：00_Fool 到 21_World)
-        const imgSlug = [
-            "00_Fool", "01_Magician", "02_HighPriestess", "03_Empress", "04_Emperor", "05_Hierophant",
-            "06_Lovers", "07_Chariot", "08_Strength", "09_Hermit", "10_WheelOfFortune", "11_Justice",
-            "12_HangedMan", "13_Death", "14_Temperance", "15_Devil", "16_Tower", "17_Star",
-            "18_Moon", "19_Sun", "20_Judgement", "21_World"
+        const majorSlugs = [
+            "m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08", "m09",
+            "m10", "m11", "m12", "m13", "m14", "m15", "m16", "m17", "m18", "m19", "m20", "m21"
         ];
 
         for(let i=0; i<22; i++) {
-            // 由於原版對調，修正力量與正義圖片排序
-            let currentSlug = imgSlug[i];
-            if(i === 8) currentSlug = "11_Justice";
-            if(i === 11) currentSlug = "08_Strength";
-
             masterDeck.push({
-                name: `${majorNames[i]}`,
+                name: `[大牌] ${majorNames[i]}`,
                 element: "命運核心課題",
                 upMeaning: majorMeanings[i].up,
                 revMeaning: majorMeanings[i].rev,
-                imgUrl: `https://githubusercontent.com{currentSlug}.jpg`
+                imgUrl: `https://tarotapi.com{majorSlugs[i]}.jpg`
             });
         }
-        // 2. 小阿爾克那 56張牌組定義與圖片映射
+        // 2. 小阿爾克那 56張牌組定義與釋義
         const suits = [
-            { id: 'wands', name: '權杖', elem: '火 (行動/熱情)', slug: 'w' },
-            { id: 'cups', name: '聖杯', elem: '水 (情感/人際)', slug: 'c' },
-            { id: 'swords', name: '寶劍', elem: '風 (思想/考驗)', slug: 's' },
-            { id: 'pentacles', name: '星幣', elem: '土 (物質/現實)', slug: 'p' }
+            { id: 'wands', name: '權杖', elem: '火 (行動/熱情)', slug: 'Wands' },
+            { id: 'cups', name: '聖杯', elem: '水 (情感/人際)', slug: 'Cups' },
+            { id: 'swords', name: '寶劍', elem: '風 (思想/考驗)', slug: 'Swords' },
+            { id: 'pentacles', name: '星幣', elem: '土 (物質/現實)', slug: 'Pentacles' }
         ];
 
         const ranks = [
-            { lvl: 'Ace', name: '王牌', up: "全新機遇、能量湧現、新方向", rev: "時機未到、缺乏動力、錯失良機", file: '01' },
-            { lvl: '2', name: '二', up: "規劃、權衡、跨出第一步", rev: "猶豫不決、失衡、缺乏遠見", file: '02' },
-            { lvl: '3', name: '三', up: "團隊合作、展望未來、初見成效", rev: "進度受阻、溝通不良、合作破裂", file: '03' },
-            { lvl: '4', name: '四', up: "穩定、慶祝、和諧與安全感", rev: "沉悶、渴望突破、內部不穩", file: '04' },
-            { lvl: '5', name: '五', up: "競爭、衝突、混亂與挑戰", rev: "尋求和解、內耗結束、避開衝突", file: '05' },
-            { lvl: '6', name: '六', up: "勝利、獲得認可、前進與回報", rev: "流言蜚語、短暫成功、延遲", file: '06' },
-            { lvl: '7', name: '七', up: "防禦、堅持立場、勇氣", rev: "精疲力竭、放棄、防線崩潰", file: '07' },
-            { lvl: '8', name: '八', up: "迅速進展、訊息傳播、行動力", rev: "混亂受阻、方向錯誤、急躁冒進", file: '08' },
-            { lvl: '9', name: '九', up: "不屈不撓、即將成功、累積防備", rev: "壓力過重、防禦過當、陷入瓶頸", file: '09' },
-            { lvl: '10', name: '十', up: "責任頂點、大功告成、負擔沉重", rev: "釋放壓力、逃避責任、重新調整", file: '10' },
-            { lvl: 'Page', name: '侍從', up: "新消息、學習熱情、好奇心", rev: "缺乏計劃、幼稚、八卦與延遲", file: '11' },
-            { lvl: 'Knight', name: '騎士', up: "積極行動、勇往直前、進展", rev: "魯莽衝動、計畫停滯、橫衝直撞", file: '12' },
-            { lvl: 'Queen', name: '王后', up: "成熟包容、情感富足、掌控力", rev: "情緒化、嫉妒心強、缺乏自信", file: '13' },
-            { lvl: 'King', name: '國王', up: "權威領導、掌控全局、成功穩定", rev: "獨裁、濫用權力、缺乏遠見", file: '14' }
+            { lvl: 'Ace', name: '王牌', up: "全新機遇、能量湧現、新方向", rev: "時機未到、缺乏動力、錯失良機" },
+            { lvl: '2', name: '二', up: "規劃、權衡、跨出第一步", rev: "猶豫不決、失衡、缺乏遠見" },
+            { lvl: '3', name: '三', up: "團隊合作、展望未來、初見成效", rev: "進度受阻、溝通不良、合作破裂" },
+            { lvl: '4', name: '四', up: "穩定、慶祝、和諧與安全感", rev: "沉悶、渴望突破、內部不穩" },
+            { lvl: '5', name: '五', up: "競爭、衝突、混亂與挑戰", rev: "尋求和解、內耗結束、避開衝突" },
+            { lvl: '6', name: '六', up: "勝利、獲得認可、前進與回報", rev: "流言蜚語、短暫成功、延遲" },
+            { lvl: '7', name: '七', up: "防禦、堅持立場、勇氣", rev: "精疲力竭、放棄、防線崩潰" },
+            { lvl: '8', name: '八', up: "迅速進展、訊息傳播、行動力", rev: "混亂受阻、方向錯誤、急躁冒進" },
+            { lvl: '9', name: '九', up: "不屈不撓、即將成功、累積防備", rev: "壓力過重、防禦過當、陷入瓶頸" },
+            { lvl: '10', name: '十', up: "責任頂點、大功告成、負擔沉重", rev: "釋放壓力、逃避責任、重新調整" },
+            { lvl: 'Page', name: '侍從', up: "新消息、學習熱情、好奇心", rev: "缺乏計劃、幼稚、八卦與延遲" },
+            { lvl: 'Knight', name: '騎士', up: "積極行動、勇往直前、進展", rev: "魯莽衝動、計畫停滯、橫衝直撞" },
+            { lvl: 'Queen', name: '王后', up: "成熟包容、情感富足、掌控力", rev: "情緒化、嫉妒心強、缺乏自信" },
+            { lvl: 'King', name: '國王', up: "權威領導、掌控全局、成功穩定", rev: "獨裁、濫用權力、缺乏遠見" }
         ];
 
-        // 組裝56張小牌進入masterDeck並生成各自網址
+        // 自動組裝56張小牌，並對應專屬的高相容第三方卡片圖案網址
         suits.forEach(suit => {
             ranks.forEach(rank => {
                 masterDeck.push({
@@ -259,7 +250,7 @@
                     element: suit.elem,
                     upMeaning: rank.up,
                     revMeaning: rank.rev,
-                    imgUrl: `https://githubusercontent.com{suit.slug}${rank.file}.jpg`
+                    imgUrl: `https://tarotapi.com{suit.slug}/${rank.lvl.toLowerCase()}.jpg`
                 });
             });
         });
